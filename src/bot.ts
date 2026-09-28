@@ -1,10 +1,10 @@
-import { Telegraf } from 'telegraf';
+import { Bot } from 'grammy';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import config from '../config.json';
 
 const agent = new HttpsProxyAgent(config.proxy);
 
-const bot = new Telegraf(config.token, { telegram: { agent } });
+const bot = new Bot(config.token, { client: { baseFetchConfig: { agent } } });
 
 export const sendMessage = (message: string) =>
-  bot.telegram.sendMessage(config.channel_id, message, { parse_mode: 'HTML' });
+  bot.api.sendMessage(config.channel_id, message, { parse_mode: 'HTML' });
