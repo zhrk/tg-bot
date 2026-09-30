@@ -6,5 +6,5 @@ const agent = new HttpsProxyAgent(config.proxy);
 
 const bot = new Bot(config.token, { client: { baseFetchConfig: { agent } } });
 
-export const sendMessage = (message: string) =>
-  bot.api.sendMessage(config.channel_id, message, { parse_mode: 'HTML' });
+export const sendMessage = (message: string, channel: 'first' | 'second') =>
+  bot.api.sendMessage(config.channels[channel], message, { parse_mode: 'HTML' });

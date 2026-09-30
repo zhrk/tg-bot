@@ -9,7 +9,9 @@ app.post('/send', async (c) => {
   try {
     const body = await c.req.json();
 
-    await sendMessage(body.message);
+    const { message, channel } = body;
+
+    await sendMessage(message, channel);
 
     return c.body(null);
   } catch {
