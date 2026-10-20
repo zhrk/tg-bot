@@ -21,3 +21,5 @@ bot.on('message:text', async (ctx) => {
 
 export const sendMessage = (message: string, channel: 'first' | 'second') =>
   bot.api.sendMessage(config.channels[channel], message, { parse_mode: 'HTML' });
+
+bot.start();
