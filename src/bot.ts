@@ -1,6 +1,8 @@
 import { Bot } from 'grammy';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import config from '../config.json';
+import { execFile } from 'child_process';
+import path from 'path';
 
 const agent = new HttpsProxyAgent(config.proxy);
 
@@ -12,11 +14,23 @@ bot.on('message:text', async (ctx) => {
   if (text === '/start') return;
   if (ctx.from?.id !== config.admin_id) return;
 
-  await fetch(config.sr_url, {
-    method: 'POST',
-    body: JSON.stringify({ slug: text }),
-    headers: { 'Content-Type': 'application/json', 'X-Token': config.sr_token },
-  });
+  if (text.includes('instagram') || text.includes('tiktok')) {
+    execFile(
+      'gallery-dl',
+      ['-c', path.join(process.cwd(), 'gallery-dl.conf'), text],
+      (error, stdout, stderr) => {
+        console.log(error?.message || stdout || stderr);
+      }
+    );
+  }
+
+  if (text.includes('kick')) {
+    await fetch(config.sr_url, {
+      method: 'POST',
+      body: JSON.stringify({ slug: text }),
+      headers: { 'Content-Type': 'application/json', 'X-Token': config.sr_token },
+    });
+  }
 });
 
 export const sendMessage = (message: string, channel: 'first' | 'second') =>
