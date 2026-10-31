@@ -22,6 +22,8 @@ bot.on('message:text', async (ctx) => {
       ['-c', path.join(process.cwd(), 'gallery-dl.conf'), url.origin + url.pathname],
       (error, stdout, stderr) => {
         console.log(error?.message || stdout || stderr);
+
+        if (!error) ctx.react('👍');
       }
     );
   }
