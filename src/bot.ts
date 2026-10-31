@@ -20,7 +20,7 @@ bot.on('message:text', async (ctx) => {
     execFile(
       'gallery-dl',
       ['-c', path.join(process.cwd(), 'gallery-dl.conf'), url.origin + url.pathname],
-      (error) => ctx.react(error ? '😡' : '🍾')
+      (_, __, stderr) => ctx.react(stderr.includes('[error]') ? '😡' : '👍')
     );
   }
 
