@@ -18,7 +18,7 @@ bot.on('message:text', async (ctx) => {
     execFile(
       'gallery-dl',
       ['-c', path.join(process.cwd(), 'gallery-dl.conf'), text],
-      { shell: true },
+      { shell: 'powershell.exe' },
       (error, stdout, stderr) => {
         console.log(error?.message || stdout || stderr);
       }
