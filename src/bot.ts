@@ -15,9 +15,11 @@ bot.on('message:text', async (ctx) => {
   if (ctx.from?.id !== config.admin_id) return;
 
   if (text.includes('instagram') || text.includes('tiktok')) {
+    const url = new URL(text);
+
     execFile(
       'gallery-dl',
-      ['-c', path.join(process.cwd(), 'gallery-dl.conf'), text],
+      ['-c', path.join(process.cwd(), 'gallery-dl.conf'), url.origin + url.pathname],
       (error, stdout, stderr) => {
         console.log(error?.message || stdout || stderr);
       }
