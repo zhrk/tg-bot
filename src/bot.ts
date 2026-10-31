@@ -16,7 +16,7 @@ bot.on('message:text', async (ctx) => {
 
   if (text.includes('instagram') || text.includes('tiktok')) {
     execFile(
-      'gallery-dl',
+      'gallery-dl.exe',
       ['-c', path.join(process.cwd(), 'gallery-dl.conf'), text],
       (error, stdout, stderr) => {
         console.log(error?.message || stdout || stderr);
