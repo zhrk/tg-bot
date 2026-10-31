@@ -1,7 +1,7 @@
 import { Bot } from 'grammy';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import config from '../config.json';
-import { execFile } from 'child_process';
+import { spawn } from 'child_process';
 import path from 'path';
 
 const agent = new HttpsProxyAgent(config.proxy);
@@ -15,14 +15,20 @@ bot.on('message:text', async (ctx) => {
   if (ctx.from?.id !== config.admin_id) return;
 
   if (text.includes('instagram') || text.includes('tiktok')) {
-    execFile(
-      'gallery-dl',
-      ['-c', path.join(process.cwd(), 'gallery-dl.conf'), text],
-      { shell: 'powershell.exe' },
-      (error, stdout, stderr) => {
-        console.log(error?.message || stdout || stderr);
-      }
-    );
+    spawn(
+      'wt',
+      [
+        '-w',
+        '-1',
+        'powershell',
+        '-Command',
+        'gallery-dl',
+        '-c',
+        path.join(process.cwd(), 'gallery-dl.conf'),
+        text,
+      ],
+      { stdio: 'ignore', detached: true }
+    ).unref();
   }
 
   if (text.includes('kick')) {
