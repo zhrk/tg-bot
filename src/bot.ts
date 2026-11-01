@@ -1,8 +1,14 @@
 import { Bot } from 'grammy';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import config from '../config.json';
-import { execFile } from 'child_process';
+import { execFile, spawn } from 'child_process';
 import path from 'path';
+
+const getUrl = (text: string) => {
+  const url = new URL(text);
+
+  return url.origin + url.pathname;
+};
 
 const agent = new HttpsProxyAgent(config.proxy);
 
@@ -15,13 +21,21 @@ bot.on('message:text', async (ctx) => {
   if (ctx.from?.id !== config.admin_id) return;
 
   if (text.includes('instagram') || text.includes('tiktok')) {
-    const url = new URL(text);
-
     execFile(
       'gallery-dl',
-      ['-c', path.join(process.cwd(), 'gallery-dl.conf'), url.origin + url.pathname],
+      ['-c', path.join(process.cwd(), 'gallery-dl.conf'), getUrl(text)],
       (_, __, stderr) => ctx.react(stderr.includes('[error]') ? '😡' : '👍')
     );
+  }
+
+  if (text.includes('twitch')) {
+    spawn(
+      'wt',
+      ['-w', '-1', 'powershell', '-Command', 'yt-dlp', '--live-from-start', getUrl(text)],
+      { stdio: 'ignore', detached: true }
+    ).unref();
+
+    await ctx.react('👍');
   }
 
   if (text.includes('kick')) {
