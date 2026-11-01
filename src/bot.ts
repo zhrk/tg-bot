@@ -4,6 +4,8 @@ import config from '../config.json';
 import { execFile, spawn } from 'child_process';
 import path from 'path';
 
+const cwd = process.cwd();
+
 const getUrl = (text: string) => {
   const url = new URL(text);
 
@@ -23,7 +25,7 @@ bot.on('message:text', async (ctx) => {
   if (text.includes('instagram') || text.includes('tiktok')) {
     execFile(
       'gallery-dl',
-      ['-c', path.join(process.cwd(), 'gallery-dl.conf'), getUrl(text)],
+      ['-c', path.join(cwd, 'gallery-dl.conf'), getUrl(text)],
       (_, __, stderr) => ctx.react(stderr.includes('[error]') ? '😡' : '👍')
     );
   }
@@ -31,7 +33,17 @@ bot.on('message:text', async (ctx) => {
   if (text.includes('twitch')) {
     spawn(
       'wt',
-      ['-w', '-1', 'powershell', '-Command', 'yt-dlp', '--live-from-start', getUrl(text)],
+      [
+        '-w',
+        '-1',
+        'powershell',
+        '-Command',
+        'yt-dlp',
+        '--config-location',
+        path.join(cwd, 'yt-dlp.conf'),
+        '--live-from-start',
+        getUrl(text),
+      ],
       { stdio: 'ignore', detached: true }
     ).unref();
 

@@ -1,5 +1,6 @@
 node_modules
 config.json
 gallery-dl.conf
+yt-dlp.conf
 cookies
 logs.log
