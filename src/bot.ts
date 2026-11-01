@@ -47,7 +47,7 @@ bot.on('message:text', async (ctx) => {
       { stdio: 'ignore', detached: true }
     ).unref();
 
-    await ctx.react('👍');
+    await ctx.react('👾');
   }
 
   if (text.includes('kick')) {
